@@ -1,0 +1,33 @@
+{
+  "runtimeDir": "/Users/you/.local/state/browser-guard-mcp",
+  "timeoutMs": 60000,
+  "ledgerMaxEntries": 200,
+  "chrome": {
+    "nodeCommand": "/usr/local/bin/node",
+    "playwrightCli": "/Users/you/.npm-global/lib/node_modules/@playwright/mcp/cli.js"
+  },
+  "capabilities": {
+    "defaultProfile": "public-read",
+    "confirmationTtlSeconds": 60,
+    "profiles": [
+      {
+        "id": "public-read",
+        "hosts": ["*"],
+        "operations": ["navigate", "read", "extract", "observe"],
+        "maxTtlSeconds": 3600
+      },
+      {
+        "id": "public-interact",
+        "hosts": ["*"],
+        "operations": ["navigate", "read", "extract", "observe", "interact"],
+        "maxTtlSeconds": 900
+      },
+      {
+        "id": "github-interact",
+        "hosts": ["github.com", "*.github.com"],
+        "operations": ["navigate", "read", "extract", "observe", "interact"],
+        "maxTtlSeconds": 900
+      }
+    ]
+  }
+}

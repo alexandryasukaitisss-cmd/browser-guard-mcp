@@ -1,0 +1,46 @@
+{
+  "name": "browser-guard-mcp",
+  "version": "0.1.0",
+  "description": "Capability-scoped browser access for MCP agents: public-only navigation, one-use confirmation for secrets, and in-memory evidence.",
+  "license": "MIT",
+  "author": "Aliaksandr Yasiukaitsis",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alexandryasukaitisss-cmd/browser-guard-mcp.git"
+  },
+  "homepage": "https://github.com/alexandryasukaitisss-cmd/browser-guard-mcp#readme",
+  "bugs": {
+    "url": "https://github.com/alexandryasukaitisss-cmd/browser-guard-mcp/issues"
+  },
+  "main": "src/router.cjs",
+  "bin": {
+    "browser-guard-mcp": "src/cli.cjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.cjs",
+    "smoke": "node test/live-smoke.cjs",
+    "check": "node src/cli.cjs --check --config examples/config.example.json"
+  },
+  "files": [
+    "src",
+    "docs",
+    "examples",
+    "README.md",
+    "README.ru.md",
+    "LICENSE",
+    "SECURITY.md"
+  ],
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "browser",
+    "playwright",
+    "ai-agents",
+    "security",
+    "capability",
+    "sandbox"
+  ]
+}

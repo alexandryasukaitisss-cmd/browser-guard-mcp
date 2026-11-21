@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "browser-guard": {
+      "command": "/usr/local/bin/node",
+      "args": [
+        "/Users/you/src/browser-guard-mcp/src/cli.cjs",
+        "--config",
+        "/Users/you/.config/browser-guard-mcp/config.json"
+      ]
+    }
+  }
+}
