@@ -19,13 +19,14 @@ const SNAPSHOT = `### Page
 \`\`\``;
 
 class FakeChrome {
-  constructor({ cwd, snapshot = SNAPSHOT, toolError } = {}) {
+  constructor({ cwd, snapshot = SNAPSHOT, toolError, url = 'https://example.com/' } = {}) {
     this.cwd = cwd;
     this.snapshot = snapshot;
+    this.url = url;
     this.toolError = toolError;
     this.calls = [];
     this.tools = [
-      'browser_navigate', 'browser_snapshot', 'browser_click', 'browser_type', 'browser_fill_form',
+      'browser_navigate', 'browser_navigate_back', 'browser_snapshot', 'browser_click', 'browser_type', 'browser_fill_form',
       'browser_press_key', 'browser_select_option', 'browser_hover', 'browser_file_upload',
       'browser_console_messages', 'browser_wait_for', 'browser_close',
     ].map((name) => ({ name, inputSchema: { type: 'object' } }));
@@ -37,12 +38,14 @@ class FakeChrome {
   async callTool(name, args) {
     this.calls.push({ name, args });
     if (this.toolError === name) return { content: [{ type: 'text', text: 'backend failure' }], isError: true };
-    if (name === 'browser_snapshot') return { content: [{ type: 'text', text: this.snapshot }] };
+    if (name === 'browser_snapshot') return { content: [{ type: 'text', text: this.snapshot.replace('https://example.com/', this.url) }] };
     if (name === 'browser_console_messages') return { content: [{ type: 'text', text: JSON.stringify([]) }] };
     return { content: [{ type: 'text', text: JSON.stringify({ name, args }) }] };
   }
 
   async stop() {}
+
+  setUrl(url) { this.url = url; }
 }
 
 function memoryLedger(events = []) {
@@ -197,4 +200,43 @@ test('status reports the active backend and capability without page data', async
   assert.equal(status.chrome, 'available');
   assert.equal(status.capabilities.profile_id, 'public-interact');
   assert.doesNotMatch(JSON.stringify(status), /example\.com|Password/);
+});
+
+
+test('route_call navigation refreshes the active URL from the new snapshot', async () => {
+  const chrome = new FakeChrome();
+  const { router } = create({ chrome });
+  await router.callTool('browser_route_open', { url: 'https://example.com/', intent: 'interactive' });
+  chrome.setUrl('https://example.org/');
+  await router.callTool('browser_route_call', { tool: 'browser_navigate', arguments: { url: 'https://example.org/' } });
+  const bundle = JSON.parse((await router.callTool('browser_evidence_bundle', {})).content[0].text);
+  assert.equal(bundle.url, 'https://example.org/');
+  chrome.setUrl('https://example.com/');
+  await router.callTool('browser_route_call', { tool: 'browser_navigate_back', arguments: {} });
+  const back = JSON.parse((await router.callTool('browser_evidence_bundle', {})).content[0].text);
+  assert.equal(back.url, 'https://example.com/');
+});
+
+test('a backend without browser_navigate fails closed before any open', async () => {
+  const chrome = new FakeChrome();
+  chrome.tools = chrome.tools.filter((tool) => tool.name !== 'browser_navigate');
+  const { router } = create({ chrome });
+  await assert.rejects(
+    () => router.callTool('browser_route_open', { url: 'https://example.com/' }),
+    (error) => error.code === 'TOOL_DENIED',
+  );
+});
+
+test('unknown backend and calls after close fail without page data', async () => {
+  const { router } = create();
+  await assert.rejects(
+    () => router.callTool('browser_route_call', { backend: 'other', tool: 'browser_snapshot', arguments: {} }),
+    (error) => error.code === 'INVALID_ARGUMENT',
+  );
+  await router.callTool('browser_route_open', { url: 'https://example.com/', intent: 'interactive' });
+  await router.callTool('browser_route_call', { tool: 'browser_close', arguments: {} });
+  await assert.rejects(
+    () => router.callTool('browser_route_call', { tool: 'browser_snapshot', arguments: {} }),
+    (error) => error.code === 'INVALID_ARGUMENT',
+  );
 });

@@ -193,7 +193,7 @@ local server requests: 0
 ## Разработка
 
 ```sh
-npm test          # 45 детерминированных тестов, без браузера
+npm test          # 49 детерминированных тестов, без браузера
 npm run check     # проверить пример конфигурации
 npm run smoke -- --config /path/to/config.json
 ```

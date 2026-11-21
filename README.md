@@ -193,7 +193,7 @@ Report security issues privately as described in [SECURITY.md](SECURITY.md).
 ## Development
 
 ```sh
-npm test          # 45 deterministic tests, no browser
+npm test          # 49 deterministic tests, no browser
 npm run check     # validate the example configuration
 npm run smoke -- --config /path/to/config.json
 ```

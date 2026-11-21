@@ -23,6 +23,11 @@ test('runtime config requires an explicit Playwright entrypoint and keeps the is
   assert.ok(args.includes('<-loopback>'));
 });
 
+test('runtime requires runtimeDir and a Playwright entrypoint', () => {
+  assert.throws(() => normalizeConfig({ chrome: { playwrightCli: '/tmp/pw.js' } }), /INVALID_CONFIG/);
+  assert.throws(() => normalizeConfig({ runtimeDir: '/tmp/router-runtime' }), /INVALID_CONFIG/);
+});
+
 test('runtime refuses flags that weaken persistence or network boundaries', () => {
   assert.throws(
     () => normalizeConfig({ runtimeDir: '/tmp/router-runtime', chrome: { playwrightCli: 'playwright', extraArgs: ['--no-sandbox'] } }),
