@@ -8,9 +8,11 @@
 
 ![Terminal demo: public page opens, loopback is denied, local server receives 0 requests](docs/demo.svg)
 
-An MCP server that gives a coding agent a controlled Chromium session: public pages only, explicit capability profiles, one-use approval for card/password/one-time-code entry, and evidence that stays in process memory.
+Browser Guard lets an AI agent open pages and click around without handing it your desktop browser. It starts a separate, empty Chrome, allows only public HTTP(S) pages, and asks you before it types a password, card number, or one-time code.
 
-The guard starts its own isolated headless Chrome. It does not attach to your desktop browser, inherit your cookies, load your extensions, or expose a general-purpose browser API. Every action goes through one narrow, auditable surface.
+It also blocks localhost and private network addresses, refuses to upload known secret files, and keeps page snapshots in memory instead of writing them to disk. The local log has no URLs or page text.
+
+It is an MCP server for Codex, Claude, OpenCode, and other MCP clients. Every browser action is checked in one place.
 
 Version 0.1.0. macOS-first; the sensitive-input dialog currently uses `osascript`.
 
