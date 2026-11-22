@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Browser Guard MCP — capability-scoped browser access for agents</title>
+<meta name="description" content="Give an MCP agent a controlled Chromium session: public-only navigation, one-use approval for secrets, and evidence that stays in memory.">
+<style>
+  :root { color-scheme: dark; --bg:#0b0d11; --panel:#111318; --line:#2a2f3a; --text:#e6e8ee; --muted:#8b93a7; --green:#7ee787; --red:#ff7b72; --accent:#d2a8ff; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+  .wrap { max-width:980px; margin:0 auto; padding:56px 24px 72px; }
+  .kicker { color:var(--accent); font-weight:700; letter-spacing:.08em; text-transform:uppercase; font-size:12px; }
+  h1 { font-size:clamp(38px,7vw,68px); line-height:1.02; letter-spacing:-.04em; margin:14px 0 16px; }
+  .lead { color:var(--muted); font-size:20px; max-width:720px; }
+  .demo { margin:34px 0; border:1px solid var(--line); border-radius:18px; overflow:hidden; background:var(--panel); }
+  .demo img { display:block; width:100%; height:auto; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:16px; margin:28px 0; }
+  .card { border:1px solid var(--line); border-radius:14px; padding:18px; background:var(--panel); }
+  .card h3 { margin:0 0 8px; font-size:16px; }
+  .card p { margin:0; color:var(--muted); font-size:14px; }
+  .ok { color:var(--green); } .no { color:var(--red); }
+  pre { background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:18px; overflow:auto; font:13.5px/1.6 SFMono-Regular,Menlo,monospace; }
+  a { color:var(--accent); }
+  .cta { display:flex; flex-wrap:wrap; gap:12px; margin:28px 0; }
+  .btn { display:inline-block; padding:12px 18px; border-radius:10px; text-decoration:none; font-weight:700; }
+  .primary { background:var(--accent); color:#12091c; }
+  .secondary { border:1px solid var(--line); color:var(--text); }
+  footer { color:var(--muted); font-size:13px; border-top:1px solid var(--line); margin-top:36px; padding-top:18px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="kicker">MCP · browser · security</div>
+  <h1>Give your agent a browser,<br>not your browser.</h1>
+  <p class="lead">Browser Guard MCP gives a coding agent an isolated Chromium session with public-only navigation, explicit capability profiles, one-use approval for secrets, and evidence that never leaves process memory.</p>
+
+  <div class="cta">
+    <a class="btn primary" href="https://github.com/alexandryasukaitisss-cmd/browser-guard-mcp">View on GitHub</a>
+    <a class="btn secondary" href="https://github.com/alexandryasukaitisss-cmd/browser-guard-mcp/releases/tag/v0.1.0">v0.1.0 release</a>
+  </div>
+
+  <div class="demo"><img src="demo.svg" alt="Terminal demo: a public page opens, a loopback route is denied, and the local test server receives zero requests."></div>
+
+  <div class="grid">
+    <div class="card"><h3 class="ok">Public HTTP(S) only</h3><p>Literal private, loopback, link-local, and special-use addresses are rejected before the browser starts. A loopback egress proxy checks DNS for redirects and subresources.</p></div>
+    <div class="card"><h3 class="ok">Narrow tool surface</h3><p>Nine router tools. No <code>browser_evaluate</code>, cookies, storage, tabs, network inspection, or screenshots.</p></div>
+    <div class="card"><h3 class="ok">One-use approval</h3><p>Card, password, and one-time-code entry requires a native macOS confirmation bound to the origin, tool, and exact arguments.</p></div>
+    <div class="card"><h3 class="ok">Evidence in memory</h3><p>Bounded snapshots and console output expire with the grant. The local ledger stores no URLs, page text, arguments, or confirmation IDs.</p></div>
+  </div>
+
+  <h2>Quick start</h2>
+  <pre>git clone https://github.com/alexandryasukaitisss-cmd/browser-guard-mcp.git
+cd browser-guard-mcp
+npm test
+npm install -g @playwright/mcp
+cp examples/config.example.json ~/.config/browser-guard-mcp/config.json
+node src/cli.cjs --check --config ~/.config/browser-guard-mcp/config.json</pre>
+  <p class="lead">Then add the server to your MCP client. The full setup, tool list, and security boundary are in the <a href="https://github.com/alexandryasukaitisss-cmd/browser-guard-mcp#readme">README</a>.</p>
+
+  <h2>What it does not claim</h2>
+  <div class="grid">
+    <div class="card"><h3 class="no">Not an OS sandbox</h3><p>Chromium runs with the user's privileges. A browser-engine exploit is outside this design.</p></div>
+    <div class="card"><h3 class="no">Not DLP</h3><p>Sensitive-field detection is heuristic. Read the threat model before giving an agent real data.</p></div>
+  </div>
+
+  <footer>MIT · independent project · <a href="https://github.com/alexandryasukaitisss-cmd/browser-guard-mcp/blob/main/docs/threat-model.md">threat model</a></footer>
+</div>
+</body>
+</html>
