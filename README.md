@@ -1,6 +1,10 @@
 # Browser Guard MCP
 
+[![ci](https://github.com/alexandryasukaitisss-cmd/browser-guard-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/alexandryasukaitisss-cmd/browser-guard-mcp/actions/workflows/ci.yml)
+
 **Give your agent a browser, not your browser.**
+
+![Terminal demo: public page opens, loopback is denied, local server receives 0 requests](docs/demo.svg)
 
 An MCP server that gives a coding agent a controlled Chromium session: public pages only, explicit capability profiles, one-use approval for card/password/one-time-code entry, and evidence that stays in process memory.
 
