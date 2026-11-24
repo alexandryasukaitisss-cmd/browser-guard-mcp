@@ -205,3 +205,19 @@ npm run smoke -- --config /path/to/config.json
 ## Лицензия
 
 MIT. См. [LICENSE](LICENSE).
+
+
+## Подключение к MCP-клиенту без клонирования (Claude Desktop, Cursor, Claude Code, Codex)
+
+Сервер можно запускать напрямую с GitHub через `npx`:
+
+```json
+{
+  "mcpServers": {
+    "browser-guard": {
+      "command": "npx",
+      "args": ["-y", "github:alexandryasukaitisss-cmd/browser-guard-mcp", "--config", "~/.config/browser-guard-mcp/config.json"]
+    }
+  }
+}
+```

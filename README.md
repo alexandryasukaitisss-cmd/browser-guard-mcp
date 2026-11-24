@@ -8,6 +8,8 @@
 
 ![Terminal demo: public page opens, loopback is denied, local server receives 0 requests](docs/demo.svg)
 
+![Interactive flow: public page allowed, localhost/SSRF blocked, password/card paused for human approval](docs/browser-guard-demo.gif)
+
 Browser Guard lets an AI agent open pages and click around without handing it your desktop browser. It starts a separate, empty Chrome, allows only public HTTP(S) pages, and asks you before it types a password, card number, or one-time code.
 
 It also blocks localhost and private network addresses, refuses to upload known secret files, and keeps page snapshots in memory instead of writing them to disk. The local log has no URLs or page text.
@@ -211,3 +213,19 @@ The live smoke needs Chrome, Playwright MCP, and outbound network access. It ope
 ## License
 
 MIT. See [LICENSE](LICENSE).
+
+
+## Zero-clone MCP client config (Claude Desktop, Cursor, Claude Code, Codex)
+
+You can run the guard CLI directly from GitHub without cloning manually:
+
+```json
+{
+  "mcpServers": {
+    "browser-guard": {
+      "command": "npx",
+      "args": ["-y", "github:alexandryasukaitisss-cmd/browser-guard-mcp", "--config", "~/.config/browser-guard-mcp/config.json"]
+    }
+  }
+}
+```
